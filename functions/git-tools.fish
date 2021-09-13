@@ -63,6 +63,7 @@ function feature_final_prep -a source_branch dest_branch
   end
 
   git stash pop
+  return 0
 end
 
 function feature_finish_branch -a source_branch
@@ -73,6 +74,7 @@ function feature_finish_branch -a source_branch
   git pull
   git branch -d $source_branch
   git stash pop
+  return 0
 end
 
 function git-tools -a cmdname subcmd subcmdargs
