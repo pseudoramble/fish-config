@@ -45,14 +45,14 @@ function feature_final_prep -a source_branch dest_branch
   git stash
 
   git checkout $dest_branch
-  git pull
+  git pull --no-verify # this assumes a rebase strategy set in git user config
   set pull_result $status
   git checkout $source_branch
   if test $pull_result -ne 0
     echo "An error occured while trying to update $dest_branch. Aborting!"
     return
   end
-  git rebase $dest_branch
+  git rebase $dest_branch --no-verify
   git rebase -i $dest_branch
 
   read -l -P "Would you like to update the remote branch? [y|N] " update_remote_branch
