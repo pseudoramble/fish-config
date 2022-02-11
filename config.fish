@@ -4,3 +4,7 @@ if status is-interactive
         source ~/.config/fish/config.local.fish
     end
 end
+
+# Aliases
+## Git
+alias gitsp="git add . && git stash && git pull && git stash pop"
