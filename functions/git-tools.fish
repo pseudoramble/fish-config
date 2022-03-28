@@ -78,7 +78,7 @@ function feature_finish_branch -a source_branch
 end
 
 function git-tools -a cmdname subcmd subcmdargs
-  if test "$cmdname" = "-feature"
+  if test "$cmdname" = "feature"
     set source_branch (get_current_branch)
 
     if test "$subcmd" = "prep"
@@ -98,7 +98,7 @@ function git-tools -a cmdname subcmd subcmdargs
       echo "  prep: Prepare a feature branch to be merged back into $GIT_TOOLS_DEV_BRANCH (rebase/squash, push, etc)"
       echo "  finish: Complete a feature branch. Assumes that the PR has been merged into $GIT_TOOLS_DEV_BRANCH already"
     end
-  else if test "$cmdname" = "-settings"
+  else if test "$cmdname" = "settings"
     if test "$subcmd" = "develop-branch"
       if test "$subcmdargs" != ""
         echo "The active develop-branch branch will be changed."
@@ -120,8 +120,13 @@ function git-tools -a cmdname subcmd subcmdargs
   else
       echo "Error: unknown command '$cmdname'"
       echo "Valid command:"
-      echo "  -feature: A set of functions to mimic some git-flow operations but using a squash/rebase strategy instead of merging"
-      echo "  -branches: A set of functions to examine and manage existing branches in a repo"
-      echo "  -settings: A set of functions to change how git-tools itself works"
+      echo "  feature: A set of functions to mimic some git-flow operations but using a squash/rebase strategy instead of merging"
+      echo "  settings: A set of functions to change how git-tools itself works"
   end
 end
+
+complete -c git-tools -f -n "not __fish_seen_subcommand_from feature settings" -a "feature" -d "Start, finish, or prepare a feature branch."
+complete -c git-tools -f -n "not __fish_seen_subcommand_from feature settings" -a "settings" -d "Modify settings for git-tools."
+complete -c git-tools -f -n "__fish_seen_subcommand_from feature" -a "start" -d "Checkout a new feature branch from develop."
+complete -c git-tools -f -n "__fish_seen_subcommand_from feature" -a "prep" -d "Before finishing, update develop branch and perform interactive rebase on feature branch."
+complete -c git-tools -f -n "__fish_seen_subcommand_from feature" -a "finish" -d "After prep, checkout & pull develop branch from remote, delete feature branch."
