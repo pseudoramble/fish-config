@@ -8,3 +8,10 @@ end
 # Aliases
 ## Git
 alias gitsp="git add . && git stash && git pull && git stash pop"
+function gitco -a branch
+    if test -n "$branch"
+        git-tools checkout $branch pull
+    else
+        echo "Error - no branch specified. Please specify a branch"
+    end
+end

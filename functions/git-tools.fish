@@ -77,8 +77,20 @@ function feature_finish_branch -a source_branch
   return 0
 end
 
+function checkout_stash_pop -a branch update
+  git add .
+  git stash
+  git checkout $branch
+  if test -n "$update"
+    git pull
+  end
+  git stash pop
+end
+
 function git-tools -a cmdname subcmd subcmdargs
-  if test "$cmdname" = "feature"
+  if test "$cmdname" = "checkout" || test "$cmdname" = "co"
+    checkout_stash_pop $subcmd $subcmdargs
+  else if test "$cmdname" = "feature"
     set source_branch (get_current_branch)
 
     if test "$subcmd" = "prep"
@@ -125,8 +137,11 @@ function git-tools -a cmdname subcmd subcmdargs
   end
 end
 
+complete -c git-tools -f -n "not __fish_seen_subcommand_from feature settings" -a "checkout" -d "Check out a new branch. Helps shuffle unstashed/uncommitted changes over."
+complete -c git-tools -f -n "not __fish_seen_subcommand_from feature settings" -a "co" -d "Check out a new branch. Helps shuffle unstashed/uncommitted changes over."
 complete -c git-tools -f -n "not __fish_seen_subcommand_from feature settings" -a "feature" -d "Start, finish, or prepare a feature branch."
 complete -c git-tools -f -n "not __fish_seen_subcommand_from feature settings" -a "settings" -d "Modify settings for git-tools."
 complete -c git-tools -f -n "__fish_seen_subcommand_from feature" -a "start" -d "Checkout a new feature branch from develop."
 complete -c git-tools -f -n "__fish_seen_subcommand_from feature" -a "prep" -d "Before finishing, update develop branch and perform interactive rebase on feature branch."
 complete -c git-tools -f -n "__fish_seen_subcommand_from feature" -a "finish" -d "After prep, checkout & pull develop branch from remote, delete feature branch."
+complete -c git-tools -f -n "__fish_seen_subcommand_from checkout co" -a "branch" -d "The branch to checkout."
